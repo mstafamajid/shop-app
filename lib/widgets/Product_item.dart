@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Products_item extends StatelessWidget {
+class single_product_card extends StatelessWidget {
   final String imgURL;
   final String id;
   final String title;
 
-  Products_item({required this.id, required this.imgURL, required this.title});
+  single_product_card({required this.id, required this.imgURL, required this.title});
 
   @override
   Widget build(BuildContext context) {
