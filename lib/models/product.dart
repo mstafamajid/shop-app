@@ -1,11 +1,11 @@
-class Products {
+class Product {
   final String id;
   final String description;
   final String title;
   final String imgURL;
   final double price;
    bool isfavorite;
-  Products({
+  Product({
     required this.id,
     required this.description,
     required this.title,
