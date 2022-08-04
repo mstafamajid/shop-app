@@ -46,4 +46,7 @@ void addItem(Product newProduct){
   _items.add(newProduct);
   notifyListeners();
 }
+Product findProductById(String id){
+  return _items.firstWhere((element) => element.id==id);
+}
 }
