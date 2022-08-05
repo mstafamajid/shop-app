@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/screens/Product_details.dart';
 
+import '../providers/product.dart';
+
 class single_product_card extends StatelessWidget {
-  final String imgURL;
-  final String id;
-  final String title;
-
-  single_product_card(
-      {required this.id, required this.imgURL, required this.title});
-
   @override
   Widget build(BuildContext context) {
+    final singleProduct = Provider.of<Product>(context);
     return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(Product_detail.id, arguments: id),
+      onTap: () => Navigator.of(context)
+          .pushNamed(Product_detail.id, arguments: singleProduct.id),
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -28,20 +26,24 @@ class single_product_card extends StatelessWidget {
           child: GridTile(
             footer: GridTileBar(
               title: Text(
-                title,
+                singleProduct.title,
                 textAlign: TextAlign.center,
               ),
               backgroundColor:
                   Theme.of(context).colorScheme.primary.withAlpha(200),
-              leading: Icon(
-                Icons.favorite,
-                color: Theme.of(context).canvasColor,
+              leading: IconButton(
+                onPressed: () => singleProduct.toggleFavoriteStatus(),
+                icon: Icon(
+                    singleProduct.isfavorite
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
+                    color: Theme.of(context).canvasColor),
               ),
               trailing: Icon(Icons.shopping_cart,
                   color: Theme.of(context).canvasColor),
             ),
             child: Image.network(
-              imgURL,
+              singleProduct.imgURL,
               fit: BoxFit.cover,
             ),
           ),

@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:shop_app/models/product.dart';
-import 'package:shop_app/widgets/Product_item.dart';
+import 'package:shop_app/providers/product.dart';
+import 'package:shop_app/widgets/Single_Product_item.dart';
 
 class Products_Item with ChangeNotifier{
 
+ // ignore: prefer_final_fields
  List<Product> _items=[
     Product(
       id: 'p1',
