@@ -7,7 +7,7 @@ import '../providers/product.dart';
 class single_product_card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final singleProduct = Provider.of<Product>(context);
+    final singleProduct = Provider.of<Product>(context, listen: false);
     return GestureDetector(
       onTap: () => Navigator.of(context)
           .pushNamed(Product_detail.id, arguments: singleProduct.id),
@@ -31,13 +31,15 @@ class single_product_card extends StatelessWidget {
               ),
               backgroundColor:
                   Theme.of(context).colorScheme.primary.withAlpha(200),
-              leading: IconButton(
-                onPressed: () => singleProduct.toggleFavoriteStatus(),
-                icon: Icon(
-                    singleProduct.isfavorite
-                        ? Icons.favorite
-                        : Icons.favorite_outline,
-                    color: Theme.of(context).canvasColor),
+              leading: Consumer<Product>(
+                builder: (ctx, singleProduct, child) => IconButton(
+                  onPressed: () => singleProduct.toggleFavoriteStatus(),
+                  icon: Icon(
+                      (singleProduct).isfavorite
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
+                      color: Theme.of(context).canvasColor),
+                ),
               ),
               trailing: Icon(Icons.shopping_cart,
                   color: Theme.of(context).canvasColor),

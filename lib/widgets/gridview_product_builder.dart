@@ -14,8 +14,8 @@ class Gridview_products extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       itemCount: products.length,
       itemBuilder: (context, index) =>
-        ChangeNotifierProvider (
-          create: (context) =>products[index],
+        ChangeNotifierProvider.value (
+          value: products[index],
            child: single_product_card(
               ),
          )
