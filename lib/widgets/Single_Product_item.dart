@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/screens/Product_details.dart';
 
 import '../providers/product.dart';
@@ -8,6 +9,7 @@ class single_product_card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final singleProduct = Provider.of<Product>(context, listen: false);
+    final cart=Provider.of<Cart>(context, listen: false);
     return GestureDetector(
       onTap: () => Navigator.of(context)
           .pushNamed(Product_detail.id, arguments: singleProduct.id),
@@ -41,7 +43,10 @@ class single_product_card extends StatelessWidget {
                       color: Theme.of(context).canvasColor),
                 ),
               ),
-              trailing: Icon(Icons.shopping_cart,
+              trailing: IconButton(icon:Icon(Icons.shopping_cart),
+              onPressed: (){
+                cart.addItem(singleProduct.id, singleProduct.title,singleProduct.price);
+              },
                   color: Theme.of(context).canvasColor),
             ),
             child: Image.network(

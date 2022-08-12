@@ -18,6 +18,7 @@ class Product with ChangeNotifier {
 
   void toggleFavoriteStatus() {
     isfavorite = !isfavorite;
+    
     notifyListeners();
   }
 }
