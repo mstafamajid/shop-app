@@ -51,4 +51,8 @@ int get length {
     }
     notifyListeners();
   }
+  void removeItem(String productId){
+_items.remove(productId);
+notifyListeners();
+  }
 }

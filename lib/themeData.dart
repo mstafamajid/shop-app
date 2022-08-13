@@ -15,6 +15,6 @@ ThemeData Mytheme(BuildContext context) {
             fontWeight: FontWeight.w900,
             fontSize: 30,
             color: Color(0xffEAE3D2)),
-        bodyText2: TextStyle(color: Colors.red)),
+        bodyText2: TextStyle(color: Color(0xff607EAA))),
   );
 }

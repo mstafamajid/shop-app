@@ -49,9 +49,12 @@ class single_product_card extends StatelessWidget {
               },
                   color: Theme.of(context).canvasColor),
             ),
-            child: Image.network(
-              singleProduct.imgURL,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag:singleProduct.id ,
+              child: Image.network(
+                singleProduct.imgURL,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

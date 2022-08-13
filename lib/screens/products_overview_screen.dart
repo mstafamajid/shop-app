@@ -33,7 +33,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                           if (!_isfavorites) _isfavorites = true;
                         });
                       },
-                      child: Text('favorites'),
+                      child: const Text('favorites'),
                     ),
                   ),
                   PopupMenuItem(
@@ -53,7 +53,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           Consumer<Cart>(
             builder: ((context, cart, child) => Badge(
                   value: cart.length.toString(),
-                  color: Colors.red,
+                  color: Theme.of(context).canvasColor,
                   child: IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, Cart_screen.id);

@@ -28,10 +28,13 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: Mytheme(context),
         home: ProductsOverviewScreen(),
-        routes: {Product_detail.id: (context) => Product_detail(),
-        Cart_screen.id:(context) => Cart_screen()},
+        routes: {
+          Product_detail.id: (context) => Product_detail(),
+          Cart_screen.id: (context) => Cart_screen()
+        },
       ),
     );
   }
