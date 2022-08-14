@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/ordered_items.dart';
+import 'package:shop_app/screens/order_screen.dart';
 import 'package:shop_app/widgets/CartBuilder.dart';
 
 class Cart_screen extends StatelessWidget {
@@ -9,6 +11,7 @@ class Cart_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Your carts'),
@@ -36,7 +39,12 @@ class Cart_screen extends StatelessWidget {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Provider.of<orders>(context, listen: false).addOrder(
+                              cart.items.values.toList(), cart.totalAmount);
+                         cart.clear();
+
+                        },
                         child: const Text(
                           'Order Now',
                           style: TextStyle(fontSize: 17),
