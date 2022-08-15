@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/screens/cart_Screen.dart';
 import 'package:shop_app/widgets/badge.dart';
+import 'package:shop_app/widgets/drawer.dart';
 
 import '../providers/product.dart';
 import '../widgets/gridview_product_builder.dart';
@@ -20,6 +21,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: myDrawer(),
       appBar: AppBar(
         actions: [
           PopupMenuButton(

@@ -35,8 +35,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Mytheme(context),
-        home: ProductsOverviewScreen(),
+        initialRoute: '/',
         routes: {
+          '/':(context) => ProductsOverviewScreen(),
           Product_detail.id: (context) => Product_detail(),
           Cart_screen.id: (context) => Cart_screen(),
           OrderScreen.id: ((context) => OrderScreen()),
