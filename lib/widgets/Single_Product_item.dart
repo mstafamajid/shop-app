@@ -9,7 +9,7 @@ class single_product_card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final singleProduct = Provider.of<Product>(context, listen: false);
-    final cart=Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     return GestureDetector(
       onTap: () => Navigator.of(context)
           .pushNamed(Product_detail.id, arguments: singleProduct.id),
@@ -43,14 +43,33 @@ class single_product_card extends StatelessWidget {
                       color: Theme.of(context).canvasColor),
                 ),
               ),
-              trailing: IconButton(icon:Icon(Icons.shopping_cart),
-              onPressed: (){
-                cart.addItem(singleProduct.id, singleProduct.title,singleProduct.price);
-              },
+              trailing: IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    cart.addItem(singleProduct.id, singleProduct.title,
+                        singleProduct.price);
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        action: SnackBarAction(
+                            textColor: Colors.white,
+                            label: 'undo',
+                            onPressed: () {
+                              cart.undoAddedItem(singleProduct.id);
+                            }),
+                        duration: const Duration(seconds: 2),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        content: Text(
+                          '${singleProduct.title} was added',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  },
                   color: Theme.of(context).canvasColor),
             ),
             child: Hero(
-              tag:singleProduct.id ,
+              tag: singleProduct.id,
               child: Image.network(
                 singleProduct.imgURL,
                 fit: BoxFit.cover,

@@ -5,10 +5,10 @@ import 'package:flutter/src/widgets/framework.dart';
 ThemeData Mytheme(BuildContext context) {
   return ThemeData(
     fontFamily: 'lato',
-    canvasColor: Color(0xffF9F5EB),
+    canvasColor: const Color(0xffF9F5EB),
     colorScheme: ThemeData().colorScheme.copyWith(
-          primary: Color(0xff1C3879),
-          secondary: Color(0xff607EAA),
+          primary: const Color(0xff1C3879),
+          secondary: const Color(0xff607EAA),
         ),
     textTheme: const TextTheme(
         headline1: TextStyle(

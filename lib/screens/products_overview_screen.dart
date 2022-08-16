@@ -24,6 +24,18 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       drawer: myDrawer(),
       appBar: AppBar(
         actions: [
+          Consumer<Cart>(
+            builder: ((context, cart, child) => Badge(
+                  value: cart.length.toString(),
+                  color: Theme.of(context).canvasColor,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Cart_screen.id);
+                    },
+                    icon: const Icon(Icons.shopping_cart),
+                  ),
+                )),
+          ),
           PopupMenuButton(
             color: Theme.of(context).canvasColor,
             splashRadius: 20,
@@ -51,18 +63,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                     ),
                   ),
                 ]),
-          ),
-          Consumer<Cart>(
-            builder: ((context, cart, child) => Badge(
-                  value: cart.length.toString(),
-                  color: Theme.of(context).canvasColor,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Cart_screen.id);
-                    },
-                    icon: const Icon(Icons.shopping_cart),
-                  ),
-                )),
           ),
         ],
         title: Text(

@@ -10,6 +10,8 @@ import 'package:shop_app/screens/products_overview_screen.dart';
 
 import 'package:shop_app/themeData.dart';
 
+import 'screens/manage_product.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
           Product_detail.id: (context) => Product_detail(),
           Cart_screen.id: (context) => Cart_screen(),
           OrderScreen.id: ((context) => OrderScreen()),
+          manage_product.id: (context) => manage_product()
         },
       ),
     );
