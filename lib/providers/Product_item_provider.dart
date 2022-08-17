@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:shop_app/providers/product.dart';
-import 'package:shop_app/widgets/Single_Product_item.dart';
+import 'package:http/http.dart' as http;
 
 class Products_Item with ChangeNotifier {
   // ignore: prefer_final_fields
@@ -46,14 +48,40 @@ class Products_Item with ChangeNotifier {
     return _items.where((element) => element.isfavorite).toList();
   }
 
-  void addItem(Product newProduct, bool isnew) {
-    if (isnew) {
-      _items.add(newProduct);
-    } else {
-      _items.remove(findProductById(newProduct.id));
-      _items.add(newProduct);
-    }
+  Future<void> addItem(Product newProduct) {
+    Uri url = Uri.parse(
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json');
+    return http
+        .post(url,
+            body: json.encode({
+              'title': newProduct.title,
+              'description': newProduct.description,
+              'price': newProduct.price.toString(),
+              'imgUrl': newProduct.imgURL,
+              'id': newProduct.id
+            }))
+        .then((response) {
+      _items.add(Product(
+          id: json.decode(response.body)['name'],
+          description: newProduct.description,
+          title: newProduct.title,
+          imgURL: newProduct.imgURL,
+          price: newProduct.price));
+      notifyListeners();
+      
+    }).catchError((error){
+throw error;
+    });
+  }
 
+  void updateProduct(Product newProduct) {
+    _items.remove(findProductById(newProduct.id));
+    _items.add(newProduct);
+    notifyListeners();
+  }
+
+  void remove(String id) {
+    _items.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 
