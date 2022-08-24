@@ -40,6 +40,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Provider.of<Products_Item>(context).findProductById(productid);
         imageFieldController.text = edited_product.imgURL;
       } else {
+        imageFieldController.text =
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg';
         edited_product = Product(
           id: DateTime.now().toString(),
           title: '',
@@ -53,7 +55,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.didChangeDependencies();
   }
 
-  void saveForm() {
+  Future<void> saveForm() async {
     if (!_form.currentState!.validate()) {
       return;
     }
@@ -62,14 +64,33 @@ class _EditProductScreenState extends State<EditProductScreen> {
       isLoading = true;
     });
     if (isnew) {
-      Provider.of<Products_Item>(context, listen: false)
-          .addItem(edited_product)
-          .then((value) {
-     setState(() {
-        isLoading = false;
-      });
+      try {
+        await Provider.of<Products_Item>(context, listen: false)
+            .addItem(edited_product);
+      } catch (e) {
+        await showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: const Text('an error has Occured'),
+                  content: const Text(
+                      'somethings thats went wrong! please try again later'),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: const Text('Okey'))
+                  ],
+                ));
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
         Navigator.of(context).pop();
-      });
+      }
     } else {
       Provider.of<Products_Item>(context, listen: false)
           .updateProduct(edited_product);
@@ -109,7 +130,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         title: const Text('editing your item'),
       ),
       body: isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Container(
@@ -161,8 +182,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         if (double.tryParse(value!) == null) {
                           return 'please write a price';
                         }
-                        if (double.parse(value) <= 0)
+                        if (double.parse(value) <= 0) {
                           return 'please write number greater than 0';
+                        }
                         return null;
                       },
                     ),
