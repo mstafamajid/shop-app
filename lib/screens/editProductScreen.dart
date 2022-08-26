@@ -63,8 +63,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
     setState(() {
       isLoading = true;
     });
-    if (isnew) {
-      try {
+    if (!isnew) {
+
+await Provider.of<Products_Item>(context, listen: false)
+          .updateProduct(edited_product);
+
+   
+    
+    } else {
+        try {
         await Provider.of<Products_Item>(context, listen: false)
             .addItem(edited_product);
       } catch (e) {
@@ -85,20 +92,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         child: const Text('Okey'))
                   ],
                 ));
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.of(context).pop();
-      }
-    } else {
-      Provider.of<Products_Item>(context, listen: false)
-          .updateProduct(edited_product);
+      } 
+    
+    }
       setState(() {
         isLoading = false;
       });
       Navigator.of(context).pop();
-    }
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/Product_item_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/screens/cart_Screen.dart';
 import 'package:shop_app/widgets/badge.dart';
@@ -17,6 +18,19 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _isfavorites = false;
+  bool _init = true;
+  bool isLoading = true;
+  @override
+  void didChangeDependencies() async {
+    if (_init) {
+      await Provider.of<Products_Item>(context).fetchAndSetProducts();
+      setState(() {
+        isLoading = false;
+      });
+    }
+    _init = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +84,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      body: Gridview_products(_isfavorites),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Gridview_products(_isfavorites),
       floatingActionButton: FloatingActionButton(onPressed: (() {})),
     );
   }

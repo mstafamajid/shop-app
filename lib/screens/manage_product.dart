@@ -11,6 +11,9 @@ import 'package:shop_app/widgets/manage_product_item.dart';
 class manage_product extends StatelessWidget {
   static const id = 'manage_screen';
 
+Future<void> refresh(BuildContext context) async{
+await Provider.of<Products_Item>(context, listen: false).fetchAndSetProducts();
+}
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<Products_Item>(context);
@@ -26,12 +29,15 @@ class manage_product extends StatelessWidget {
         ],
         title: const Text('manage your Product'),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) => ManageProductItem(
-          id: products.items[index].id,
-            imageUrl: products.items[index].imgURL,
-            title: products.items[index].title),
-        itemCount: products.items.length,
+      body: RefreshIndicator (
+        onRefresh: () => refresh(context),
+        child: ListView.builder(
+          itemBuilder: (context, index) => ManageProductItem(
+            id: products.items[index].id,
+              imageUrl: products.items[index].imgURL,
+              title: products.items[index].title),
+          itemCount: products.items.length,
+        ),
       ),
     );
   }
