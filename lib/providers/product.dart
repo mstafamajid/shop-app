@@ -25,24 +25,23 @@ class Product with ChangeNotifier {
     isfavorite = !isfavorite;
     notifyListeners();
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.jon');
-try {
-    final resposne = await http.patch(
-      url,
-      body: json.encode(
-        ({'isFavo': isfavorite}),
-      ),
-    );
-    if (resposne.statusCode >= 400) {
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.json');
+    try {
+      final resposne = await http.patch(
+        url,
+        body: json.encode(
+          ({'isFavo': isfavorite}),
+        ),
+      );
+      if (resposne.statusCode >= 400) {
+        isfavorite = oldstate;
+        notifyListeners();
+        throw const httpexception('failed');
+      }
+    } catch (e) {
       isfavorite = oldstate;
       notifyListeners();
-      throw const httpexception('failed');
+      rethrow;
     }
-  
-} catch (e) {
-    isfavorite = oldstate;
-      notifyListeners();
-  rethrow;
-}
   }
 }

@@ -88,7 +88,7 @@ class single_product_card extends StatelessWidget {
               tag: singleProduct.id,
               child: Image.network(
                 singleProduct.imgURL,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),

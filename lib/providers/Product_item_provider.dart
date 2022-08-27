@@ -27,8 +27,12 @@ class Products_Item with ChangeNotifier {
         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json');
     try {
       final response = await http.get(url);
-      final extraxtedData = json.decode(response.body) as Map<String, dynamic>;
+
+      final extraxtedData = json.decode(response.body) == null
+          ? null
+          : json.decode(response.body) as Map<String, dynamic>;
       List<Product> loadedData = [];
+      if (extraxtedData == null) return;
       extraxtedData.forEach((productId, productData) {
         loadedData.add(Product(
             id: productId,
@@ -96,15 +100,14 @@ class Products_Item with ChangeNotifier {
     notifyListeners();
     Uri url = Uri.parse(
         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.json');
-   final value=await http.delete(url);
-      if (value.statusCode >= 400) {
-        
+    final value = await http.delete(url);
+    if (value.statusCode >= 400) {
       _items.insert(indexProduct, product);
-    notifyListeners();
-        throw const httpexception('fault');
-      }
-      
-        product = null;
+      notifyListeners();
+      throw const httpexception('fault');
+    }
+
+    product = null;
   }
 
   Product findProductById(String id) {

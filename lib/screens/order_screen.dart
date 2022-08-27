@@ -8,8 +8,27 @@ import 'package:shop_app/widgets/orderItem.dart';
 
 import '../providers/ordered_items.dart';
 
-class OrderScreen extends StatelessWidget {
+class OrderScreen extends StatefulWidget {
   static const String id = 'OrderScreen';
+
+  @override
+  State<OrderScreen> createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  bool isInit=true;
+  bool isloading=true;
+  @override
+  void didChangeDependencies() async{
+   if(isInit){
+    await Provider.of<orders>(context, listen: false).fetchAndsetOrders();
+    setState(() {
+      isloading=false;
+    });
+   }
+   isInit=false;
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final order = Provider.of<orders>(context);
@@ -18,7 +37,7 @@ class OrderScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('orders'),
       ),
-      body: ListView.builder(
+      body: isloading?  Center(child: CircularProgressIndicator()): ListView.builder(
         itemBuilder: (ctx, index) => OrderItem(orders: order.items[index]),
         itemCount: order.items.length,
       ),
