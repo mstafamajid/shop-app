@@ -8,6 +8,8 @@ import '../providers/product.dart';
 class single_product_card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final scaffMes = ScaffoldMessenger.of(context);
+    final safeTheme = Theme.of(context);
     final singleProduct = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     return GestureDetector(
@@ -35,7 +37,21 @@ class single_product_card extends StatelessWidget {
                   Theme.of(context).colorScheme.primary.withAlpha(200),
               leading: Consumer<Product>(
                 builder: (ctx, singleProduct, child) => IconButton(
-                  onPressed: () => singleProduct.toggleFavoriteStatus(),
+                  onPressed: () async {
+                    try {
+                      await singleProduct.toggleFavoriteStatus();
+                    } catch (e) {
+                      scaffMes.showSnackBar(
+                        SnackBar(
+                          backgroundColor: safeTheme.colorScheme.primary,
+                          content: Text(
+                            'operation failed',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   icon: Icon(
                       (singleProduct).isfavorite
                           ? Icons.favorite

@@ -12,6 +12,8 @@ class ManageProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffMes = ScaffoldMessenger.of(context);
+    final safeTheme = Theme.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(imageUrl),
@@ -32,8 +34,8 @@ class ManageProductItem extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                 )),
             IconButton(
-                onPressed: () async{
-                 await showDialog(
+                onPressed: () async {
+                  await showDialog(
                       context: context,
                       builder: (ctx) {
                         return AlertDialog(
@@ -47,16 +49,36 @@ class ManageProductItem extends StatelessWidget {
                                 },
                                 child: const Text('no')),
                             TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   Navigator.of(ctx).pop();
-                                     Provider.of<Products_Item>(context, listen: false).remove(id);
+                                  try {
+                                    await Provider.of<Products_Item>(context,
+                                            listen: false)
+                                        .remove(id);
+                                    scaffMes.showSnackBar(SnackBar(
+                                        backgroundColor:
+                                            safeTheme.colorScheme.primary,
+                                        content: Text(
+                                          'success',
+                                          textAlign: TextAlign.center,
+                                        )));
+                                  } catch (error) {
+                                    scaffMes.showSnackBar(
+                                      SnackBar(
+                                        backgroundColor:
+                                            safeTheme.colorScheme.primary,
+                                        content: Text(
+                                          'deleting failed',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: const Text('yes')),
                           ],
                         );
                       });
-
-               
                 },
                 icon: const Icon(
                   Icons.delete,

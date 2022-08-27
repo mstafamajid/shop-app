@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:shop_app/models/myexceptionHandler.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,13 +35,10 @@ class Products_Item with ChangeNotifier {
             description: productData['description'],
             title: productData['title'],
             imgURL: productData['imgUrl'],
-            price: 
-         double.parse( productData['price'].toString() ),
-            
+            price: double.parse(productData['price'].toString()),
             isfavorite: productData['isFavo'] as bool));
-      }
-      );
-      _items=loadedData;
+      });
+      _items = loadedData;
       notifyListeners();
     } catch (error) {
       print('eeeerrrrrroooorrrrrrrr ${error.toString()}');
@@ -74,32 +73,38 @@ class Products_Item with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product newProduct) async{
-        Uri url = Uri.parse(
+  Future<void> updateProduct(Product newProduct) async {
+    Uri url = Uri.parse(
         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/${newProduct.id}.json');
-        http.patch(url,body: json.encode({
+    http.patch(url,
+        body: json.encode({
           'title': newProduct.title,
           'description': newProduct.description,
-          'price':newProduct.price,
-          'imgUrl':newProduct.imgURL,
+          'price': newProduct.price,
+          'imgUrl': newProduct.imgURL,
         }));
     _items.remove(findProductById(newProduct.id));
     _items.add(newProduct);
     notifyListeners();
   }
 
-  void remove(String id) {
-    final indexProduct=_items.indexWhere((element) => element.id==id);
- Product? product=_items[indexProduct];
-  _items.removeAt(indexProduct);
-  print(product.id);
-      Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.json');
-        http.delete(url).then((value) => product=null).catchError((error){
-          _items.insert(indexProduct, product!);
-        });
-    _items.removeWhere((element) => element.id == id);
+  Future<void> remove(String id) async {
+    final indexProduct = _items.indexWhere((element) => element.id == id);
+    Product? product = _items[indexProduct];
+    print(product.id);
+    _items.removeAt(indexProduct);
     notifyListeners();
+    Uri url = Uri.parse(
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.json');
+   final value=await http.delete(url);
+      if (value.statusCode >= 400) {
+        
+      _items.insert(indexProduct, product);
+    notifyListeners();
+        throw const httpexception('fault');
+      }
+      
+        product = null;
   }
 
   Product findProductById(String id) {
