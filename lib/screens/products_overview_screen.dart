@@ -18,19 +18,9 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _isfavorites = false;
-  bool _init = true;
-  bool isLoading = true;
-  @override
-  void didChangeDependencies() async {
-    if (_init) {
-      await Provider.of<Products_Item>(context).fetchAndSetProducts();
-      setState(() {
-        isLoading = false;
-      });
-    }
-    _init = false;
-    super.didChangeDependencies();
-  }
+
+ 
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +74,30 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      body: isLoading
-          ? Center(
+      body: FutureBuilder(
+        future:Provider.of<Products_Item>(context, listen: false).fetchAndSetProducts() ,
+        builder: ((context, snapshot) {
+          if(snapshot.connectionState==ConnectionState.waiting){
+return Center(
               child: CircularProgressIndicator(),
-            )
-          : Gridview_products(_isfavorites),
+            );
+          }
+          else{
+            if (snapshot.hasError) {
+              return const  Center(
+                child: Text('error has occured'),
+              );
+            } else {
+              return Gridview_products(_isfavorites);
+            }
+          }
+        })),
+      
+      
+      
+      
+      
+    
       floatingActionButton: FloatingActionButton(onPressed: (() {})),
     );
   }

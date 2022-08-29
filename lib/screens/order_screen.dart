@@ -16,31 +16,32 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  bool isInit=true;
-  bool isloading=true;
-  @override
-  void didChangeDependencies() async{
-   if(isInit){
-    await Provider.of<orders>(context, listen: false).fetchAndsetOrders();
-    setState(() {
-      isloading=false;
-    });
-   }
-   isInit=false;
-    super.didChangeDependencies();
-  }
   @override
   Widget build(BuildContext context) {
-    final order = Provider.of<orders>(context);
     return Scaffold(
-      drawer: myDrawer(),
-      appBar: AppBar(
-        title: const Text('orders'),
-      ),
-      body: isloading?  Center(child: CircularProgressIndicator()): ListView.builder(
-        itemBuilder: (ctx, index) => OrderItem(orders: order.items[index]),
-        itemCount: order.items.length,
-      ),
-    );
+        drawer: myDrawer(),
+        appBar: AppBar(
+          title: const Text('orders'),
+        ),
+        body: FutureBuilder(
+            future:
+                Provider.of<orders>(context, listen: false).fetchAndsetOrders(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                if (snapshot.hasError) {
+                  return const Center(child: Text(''));
+                } else {
+                  return Consumer<orders>(builder: ((context, order, child) {
+                    return ListView.builder(
+                      itemBuilder: (ctx, index) =>
+                          OrderItem(orders: order.items[index]),
+                      itemCount: order.items.length,
+                    );
+                  }));
+                }
+              }
+            })));
   }
 }
