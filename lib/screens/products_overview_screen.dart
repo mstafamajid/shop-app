@@ -10,6 +10,7 @@ import '../providers/product.dart';
 import '../widgets/gridview_product_builder.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
+  static const routname='overview';
   ProductsOverviewScreen({Key? key}) : super(key: key);
 
   @override

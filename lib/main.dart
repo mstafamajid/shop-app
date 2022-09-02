@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/Product_item_provider.dart';
 import 'package:shop_app/providers/cart.dart';
@@ -12,6 +13,7 @@ import 'package:shop_app/screens/products_overview_screen.dart';
 
 import 'package:shop_app/themeData.dart';
 
+import 'providers/auth.dart';
 import 'screens/manage_product.dart';
 
 void main() {
@@ -27,6 +29,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: ((context) => Auth()),
+        ),
+        ChangeNotifierProvider(
           create: (context) => Products_Item(),
         ),
         ChangeNotifierProvider(
@@ -41,12 +46,14 @@ class MyApp extends StatelessWidget {
         theme: Mytheme(context),
         initialRoute: '/',
         routes: {
-          '/':(context) => AuthScreen(),
+          '/': (context) => AuthScreen(),
+          ProductsOverviewScreen.routname: (context) =>
+              ProductsOverviewScreen(),
           Product_detail.id: (context) => Product_detail(),
           Cart_screen.id: (context) => Cart_screen(),
           OrderScreen.id: ((context) => OrderScreen()),
           manage_product.id: (context) => manage_product(),
-          EditProductScreen.id:(context) => EditProductScreen()
+          EditProductScreen.id: (context) => EditProductScreen()
         },
       ),
     );

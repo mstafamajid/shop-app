@@ -1,6 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
+import 'package:shop_app/screens/products_overview_screen.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -9,70 +11,53 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final deviceSize = MediaQuery.of(context);
     // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
     // transformConfig.translate(-10.0);
+    var Appbar = AppBar(
+      title: Text(
+        'My Shop',
+        style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize: 40,
+            fontFamily: 'lato',
+            fontWeight: FontWeight.w900),
+      ),
+      backgroundColor: Colors.white,
+      elevation: 0,
+      centerTitle: true,
+    );
+
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      appBar: Appbar,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).canvasColor.withOpacity(1),
-                  Theme.of(context).colorScheme.primary.withOpacity(0.6),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
+            decoration: BoxDecoration(color: Colors.white),
           ),
           SingleChildScrollView(
             child: Container(
-              height: deviceSize.height,
-              width: deviceSize.width,
+              height: (deviceSize.size.height -
+                  Appbar.preferredSize.height -
+                  deviceSize.padding.top),
+              width: deviceSize.size.width,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Flexible(
                     child: Container(
-                      margin:
-                          EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180),
-                      // ..translate(-10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.6),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 8,
-                            color: Theme.of(context).canvasColor,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Text(
-                        'MyShop',
-                        style: TextStyle(
-                          color: Theme.of(context).canvasColor,
-                          fontSize: 40,
-                          fontFamily: 'anton',
-                          fontWeight: FontWeight.normal,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                    ),
+                        child: Lottie.network(
+                            'https://lottie.host/ff6b2ade-7a6e-40c9-98c8-9d534fc51dee/FTO59BPhsG.json',
+                            errorBuilder: ((context, error, stackTrace) {
+                          return Text(error.toString());
+                        }))),
                   ),
-                  Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
-                    child: AuthCard(),
-                  ),
+                  AuthCard(),
                 ],
               ),
             ),
@@ -102,18 +87,20 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
-    if (!_formKey.currentState!.validate()) {
-      // Invalid!
-      return;
-    }
+  void _submit() async {
     _formKey.currentState!.save();
     setState(() {
       _isLoading = true;
     });
     if (_authMode == AuthMode.Login) {
-      // Log user in
+      await Provider.of<Auth>(context, listen: false)
+          .signIn(_authData['email']!, _authData['password']!)
+          .then((value) =>
+              Navigator.pushNamed(context, ProductsOverviewScreen.routname));
     } else {
+      await Provider.of<Auth>(context, listen: false)
+          .signUp(_authData['email']!, _authData['password']!);
+      _authMode = AuthMode.Login;
       // Sign user up
     }
     setState(() {
@@ -135,8 +122,11 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final deviceSize = MediaQuery.of(context);
+    print(MediaQuery.of(context).viewInsets.bottom);
     return Card(
+      margin:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
@@ -145,9 +135,10 @@ class _AuthCardState extends State<AuthCard> {
         height: _authMode == AuthMode.Signup ? 320 : 260,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
-        width: deviceSize.width * 0.75,
+        width: (deviceSize.size.width) * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
@@ -200,6 +191,9 @@ class _AuthCardState extends State<AuthCard> {
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
                     onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30))),
                   ),
                 TextButton(
                   child: Text(
