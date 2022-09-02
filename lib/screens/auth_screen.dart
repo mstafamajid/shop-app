@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/myexceptionHandler.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
 
@@ -86,22 +87,45 @@ class _AuthCardState extends State<AuthCard> {
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
-
   void _submit() async {
     _formKey.currentState!.save();
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      await Provider.of<Auth>(context, listen: false)
-          .signIn(_authData['email']!, _authData['password']!)
-          .then((value) =>
-              Navigator.pushNamed(context, ProductsOverviewScreen.routname));
-    } else {
-      await Provider.of<Auth>(context, listen: false)
-          .signUp(_authData['email']!, _authData['password']!);
-      _authMode = AuthMode.Login;
-      // Sign user up
+    try {
+      if (_authMode == AuthMode.Login) {
+        await Provider.of<Auth>(context, listen: false)
+            .signIn(_authData['email']!, _authData['password']!)
+            .then((value) =>
+                Navigator.pushNamed(context, ProductsOverviewScreen.routname));
+      } else {
+        await Provider.of<Auth>(context, listen: false)
+            .signUp(_authData['email']!, _authData['password']!);
+        _authMode = AuthMode.Login;
+        // Sign user up
+      }
+    } on httpexception catch (error) {
+      var message = 'Authentication failed';
+      if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        message = 'email not found';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        message = 'invalid password';
+      } else if (error.toString().contains('EMAIL_EXISTS')) {
+        message = 'this email already has used, try another email';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        message = 'this email isn\'t valid';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        message = 'this password to weak please use stronger password';
+      } else if (error.toString().contains('TOO')) {
+        message =
+            'Access to this account has been temporarily disabled due to many failed login attempts.';
+      }
+
+      showErrorDialog(message);
+      print(error.toString());
+    } catch (e) {
+      var message = 'Authentication has failed try again later';
+      showErrorDialog(message);
     }
     setState(() {
       _isLoading = false;
@@ -118,6 +142,27 @@ class _AuthCardState extends State<AuthCard> {
         _authMode = AuthMode.Login;
       });
     }
+  }
+
+  void showErrorDialog(String errorMessage) {
+    showDialog(
+        context: context,
+        builder: ((context) => AlertDialog(
+              titlePadding: const EdgeInsets.all(20),
+              title: const Text('Error has Occured'),
+              content: Text(errorMessage),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    child: const Text('Ok'))
+              ],
+            )));
   }
 
   @override

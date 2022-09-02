@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:shop_app/screens/manage_product.dart';
 import 'package:shop_app/screens/order_screen.dart';
+import 'package:shop_app/screens/products_overview_screen.dart';
 
 class myDrawer extends StatelessWidget {
   const myDrawer({Key? key}) : super(key: key);
@@ -19,7 +20,8 @@ class myDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.shop),
             title: const Text('shop'),
-            onTap: () => Navigator.pushReplacementNamed(context, '/'),
+            onTap: () => Navigator.pushReplacementNamed(
+                context, ProductsOverviewScreen.routname),
           ),
           ListTile(
             leading: const Icon(Icons.payment),

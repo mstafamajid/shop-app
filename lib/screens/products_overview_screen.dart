@@ -10,7 +10,7 @@ import '../providers/product.dart';
 import '../widgets/gridview_product_builder.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
-  static const routname='overview';
+  static const routname = 'overview';
   ProductsOverviewScreen({Key? key}) : super(key: key);
 
   @override
@@ -20,86 +20,82 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _isfavorites = false;
 
- 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: myDrawer(),
-      appBar: AppBar(
-        actions: [
-          Consumer<Cart>(
-            builder: ((context, cart, child) => Badge(
-                  value: cart.length.toString(),
-                  color: Theme.of(context).canvasColor,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Cart_screen.id);
-                    },
-                    icon: const Icon(Icons.shopping_cart),
-                  ),
-                )),
-          ),
-          PopupMenuButton(
-            color: Theme.of(context).canvasColor,
-            splashRadius: 20,
-            itemBuilder: ((context) => [
-                  PopupMenuItem(
-                    child: TextButton(
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        drawer: myDrawer(),
+        appBar: AppBar(
+          actions: [
+            Consumer<Cart>(
+              builder: ((context, cart, child) => Badge(
+                    value: cart.length.toString(),
+                    color: Theme.of(context).canvasColor,
+                    child: IconButton(
                       onPressed: () {
-                        setState(() {
-                          if (!_isfavorites) _isfavorites = true;
-                        });
+                        Navigator.pushNamed(context, Cart_screen.id);
                       },
-                      child: const Text('favorites'),
+                      icon: const Icon(Icons.shopping_cart),
                     ),
-                  ),
-                  PopupMenuItem(
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          if (_isfavorites) _isfavorites = false;
-                        });
-                      },
-                      child: const Text(
-                        'show all',
+                  )),
+            ),
+            PopupMenuButton(
+              color: Theme.of(context).canvasColor,
+              splashRadius: 20,
+              itemBuilder: ((context) => [
+                    PopupMenuItem(
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            if (!_isfavorites) _isfavorites = true;
+                          });
+                        },
+                        child: const Text('favorites'),
                       ),
                     ),
-                  ),
-                ]),
+                    PopupMenuItem(
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            if (_isfavorites) _isfavorites = false;
+                          });
+                        },
+                        child: const Text(
+                          'show all',
+                        ),
+                      ),
+                    ),
+                  ]),
+            ),
+          ],
+          title: Text(
+            'Shop App',
+            style: Theme.of(context).textTheme.headline1,
           ),
-        ],
-        title: Text(
-          'Shop App',
-          style: Theme.of(context).textTheme.headline1,
         ),
+        body: FutureBuilder(
+            future: Provider.of<Products_Item>(context, listen: false)
+                .fetchAndSetProducts(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('error has occured'),
+                  );
+                } else {
+                  return Gridview_products(_isfavorites);
+                }
+              }
+            })),
+        floatingActionButton: FloatingActionButton(onPressed: (() {})),
       ),
-      body: FutureBuilder(
-        future:Provider.of<Products_Item>(context, listen: false).fetchAndSetProducts() ,
-        builder: ((context, snapshot) {
-          if(snapshot.connectionState==ConnectionState.waiting){
-return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          else{
-            if (snapshot.hasError) {
-              return const  Center(
-                child: Text('error has occured'),
-              );
-            } else {
-              return Gridview_products(_isfavorites);
-            }
-          }
-        })),
-      
-      
-      
-      
-      
-    
-      floatingActionButton: FloatingActionButton(onPressed: (() {})),
     );
   }
 }
