@@ -26,9 +26,12 @@ class Products_Item with ChangeNotifier {
 //         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json');
 
 // }
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filter = false]) async {
+    String filterdString =
+        filter ? 'orderBy="creatorId"&equalTo="$userid"' : '';
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json?auth=$authToken');
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json?auth=$authToken&$filterdString');
+    print(url.toString());
     try {
       final response = await http.get(url);
 
@@ -69,6 +72,7 @@ class Products_Item with ChangeNotifier {
             'description': newProduct.description,
             'price': newProduct.price,
             'imgUrl': newProduct.imgURL,
+            'creatorId': userid
           }));
 
       _items.add(Product(

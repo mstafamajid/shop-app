@@ -10,13 +10,14 @@ import 'package:shop_app/widgets/manage_product_item.dart';
 
 class manage_product extends StatelessWidget {
   static const id = 'manage_screen';
+  bool first = true;
+  Future<void> refresh(BuildContext context) async {
+    await Provider.of<Products_Item>(context, listen: false)
+        .fetchAndSetProducts(true);
+  }
 
-Future<void> refresh(BuildContext context) async{
-await Provider.of<Products_Item>(context, listen: false).fetchAndSetProducts();
-}
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<Products_Item>(context);
     return Scaffold(
       drawer: const myDrawer(),
       appBar: AppBar(
@@ -29,15 +30,25 @@ await Provider.of<Products_Item>(context, listen: false).fetchAndSetProducts();
         ],
         title: const Text('manage your Product'),
       ),
-      body: RefreshIndicator (
-        onRefresh: () => refresh(context),
-        child: ListView.builder(
-          itemBuilder: (context, index) => ManageProductItem(
-            id: products.items[index].id,
-              imageUrl: products.items[index].imgURL,
-              title: products.items[index].title),
-          itemCount: products.items.length,
-        ),
+      body: FutureBuilder(
+        future: refresh(context),
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => refresh(context),
+                    child: Consumer<Products_Item>(
+                      builder: (context, products, child) => ListView.builder(
+                        itemBuilder: (context, index) => ManageProductItem(
+                            id: products.items[index].id,
+                            imageUrl: products.items[index].imgURL,
+                            title: products.items[index].title),
+                        itemCount: products.items.length,
+                      ),
+                    ),
+                  ),
       ),
     );
   }

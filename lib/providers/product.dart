@@ -10,8 +10,10 @@ class Product with ChangeNotifier {
   final String title;
   final String imgURL;
   final double price;
+  
   bool isfavorite;
   Product({
+ 
     required this.id,
     required this.description,
     required this.title,
