@@ -13,7 +13,9 @@ class Auth with ChangeNotifier {
     print(token);
     return token != null;
   }
-
+String get userid{
+  return _userId;
+}
   String? get token {
     if (_tokenId.isNotEmpty &&
         _userId.isNotEmpty &&

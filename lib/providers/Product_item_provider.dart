@@ -15,7 +15,8 @@ class Products_Item with ChangeNotifier {
   }
 
   late String authToken;
-  Products_Item(this.authToken, this._items);
+  late String userid;
+  Products_Item(this.authToken, this._items, this.userid);
   Products_Item.seconConstructor();
   List<Product> get favorites_item {
     return _items.where((element) => element.isfavorite).toList();
@@ -34,6 +35,9 @@ class Products_Item with ChangeNotifier {
       final extraxtedData = json.decode(response.body) == null
           ? null
           : json.decode(response.body) as Map<String, dynamic>;
+      final userFavo = await http.get(Uri.parse(
+          'https://shopapp-bd3ee-default-rtdb.firebaseio.com/userFavorates/$userid.json?auth=$authToken'));
+      final favodata = jsonDecode(userFavo.body);
       List<Product> loadedData = [];
       if (extraxtedData == null) return;
       extraxtedData.forEach((productId, productData) {
@@ -43,7 +47,8 @@ class Products_Item with ChangeNotifier {
             title: productData['title'],
             imgURL: productData['imgUrl'],
             price: double.parse(productData['price'].toString()),
-            isfavorite: productData['isFavo'] as bool));
+            isfavorite:
+                favodata == null ? false : favodata[productId] ?? false));
       });
       _items = loadedData;
       print(_items);
@@ -64,7 +69,6 @@ class Products_Item with ChangeNotifier {
             'description': newProduct.description,
             'price': newProduct.price,
             'imgUrl': newProduct.imgURL,
-            'isFavo': newProduct.isfavorite
           }));
 
       _items.add(Product(

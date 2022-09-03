@@ -12,7 +12,7 @@ class single_product_card extends StatelessWidget {
     final scaffMes = ScaffoldMessenger.of(context);
     final safeTheme = Theme.of(context);
     final singleProduct = Provider.of<Product>(context, listen: false);
-    final authData=Provider.of<Auth>(context).token;
+    final authData=Provider.of<Auth>(context);
     final cart = Provider.of<Cart>(context, listen: false);
     return GestureDetector(
       onTap: () => Navigator.of(context)
@@ -41,7 +41,7 @@ class single_product_card extends StatelessWidget {
                 builder: (ctx, singleProduct, child) => IconButton(
                   onPressed: () async {
                     try {
-                      await singleProduct.toggleFavoriteStatus(authData!);
+                      await singleProduct.toggleFavoriteStatus(authData.token!,authData.userid);
                     } catch (e) {
                       scaffMes.showSnackBar(
                         SnackBar(
