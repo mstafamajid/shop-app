@@ -5,8 +5,6 @@ import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/screens/cart_Screen.dart';
 import 'package:shop_app/widgets/badge.dart';
 import 'package:shop_app/widgets/drawer.dart';
-
-import '../providers/product.dart';
 import '../widgets/gridview_product_builder.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
@@ -24,7 +22,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return false;
+        return true;
       },
       child: Scaffold(
         drawer: myDrawer(),
@@ -81,7 +79,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 .fetchAndSetProducts(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else {
@@ -94,7 +92,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 }
               }
             })),
-        floatingActionButton: FloatingActionButton(onPressed: (() {})),
       ),
     );
   }

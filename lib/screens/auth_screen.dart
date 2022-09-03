@@ -95,9 +95,7 @@ class _AuthCardState extends State<AuthCard> {
     try {
       if (_authMode == AuthMode.Login) {
         await Provider.of<Auth>(context, listen: false)
-            .signIn(_authData['email']!, _authData['password']!)
-            .then((value) =>
-                Navigator.pushNamed(context, ProductsOverviewScreen.routname));
+            .signIn(_authData['email']!, _authData['password']!);
       } else {
         await Provider.of<Auth>(context, listen: false)
             .signUp(_authData['email']!, _authData['password']!);
@@ -125,6 +123,7 @@ class _AuthCardState extends State<AuthCard> {
       print(error.toString());
     } catch (e) {
       var message = 'Authentication has failed try again later';
+      print(e.toString());
       showErrorDialog(message);
     }
     setState(() {

@@ -27,35 +27,41 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: ((context) => Auth()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => Products_Item(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => Cart(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => orders(),
-        )
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: Mytheme(context),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => AuthScreen(),
-          ProductsOverviewScreen.routname: (context) =>
-              ProductsOverviewScreen(),
-          Product_detail.id: (context) => Product_detail(),
-          Cart_screen.id: (context) => Cart_screen(),
-          OrderScreen.id: ((context) => OrderScreen()),
-          manage_product.id: (context) => manage_product(),
-          EditProductScreen.id: (context) => EditProductScreen()
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: ((context) => Auth()),
+          ),
+          ChangeNotifierProxyProvider<Auth, Products_Item>(
+            create: (context) => Products_Item.seconConstructor(),
+            update: (_, auth, previousProduct) => Products_Item(
+                auth.token ?? '',
+                previousProduct == null ? [] : previousProduct.items),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => Cart(),
+          ),
+          ChangeNotifierProxyProvider<Auth, orders>(
+            create: (context) => orders.second(),
+            update: (context, auth, previous) => orders(
+                auth.token ?? '', previous == null ? [] : previous.items),
+          ),
+        ],
+        child: Consumer<Auth>(
+          builder: ((context, auth, child) => MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: Mytheme(context),
+                home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+                routes: {
+                  AuthScreen.routeName: (context) => AuthScreen(),
+                  ProductsOverviewScreen.routname: (context) =>
+                      ProductsOverviewScreen(),
+                  Product_detail.id: (context) => Product_detail(),
+                  Cart_screen.id: (context) => Cart_screen(),
+                  OrderScreen.id: ((context) => OrderScreen()),
+                  manage_product.id: (context) => manage_product(),
+                  EditProductScreen.id: (context) => EditProductScreen()
+                },
+              )),
+        ));
   }
 }

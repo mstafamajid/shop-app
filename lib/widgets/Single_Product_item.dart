@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/screens/Product_details.dart';
 
@@ -11,6 +12,7 @@ class single_product_card extends StatelessWidget {
     final scaffMes = ScaffoldMessenger.of(context);
     final safeTheme = Theme.of(context);
     final singleProduct = Provider.of<Product>(context, listen: false);
+    final authData=Provider.of<Auth>(context).token;
     final cart = Provider.of<Cart>(context, listen: false);
     return GestureDetector(
       onTap: () => Navigator.of(context)
@@ -39,7 +41,7 @@ class single_product_card extends StatelessWidget {
                 builder: (ctx, singleProduct, child) => IconButton(
                   onPressed: () async {
                     try {
-                      await singleProduct.toggleFavoriteStatus();
+                      await singleProduct.toggleFavoriteStatus(authData!);
                     } catch (e) {
                       scaffMes.showSnackBar(
                         SnackBar(

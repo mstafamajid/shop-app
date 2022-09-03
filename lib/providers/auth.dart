@@ -5,9 +5,23 @@ import 'dart:convert';
 import 'package:shop_app/models/myexceptionHandler.dart';
 
 class Auth with ChangeNotifier {
-  String? tokenId;
-  DateTime? dateExpire;
-  String? userId;
+  String _tokenId = '';
+  DateTime? _dateExpire;
+  String _userId = '';
+
+  bool get isAuth {
+    print(token);
+    return token != null;
+  }
+
+  String? get token {
+    if (_tokenId.isNotEmpty &&
+        _userId.isNotEmpty &&
+        _dateExpire!.isAfter(DateTime.now())) {
+      return _tokenId;
+    }
+    return null;
+  }
 
   Future<void> authenticate(
       String email, String password, String urlSegment) async {
@@ -25,6 +39,12 @@ class Auth with ChangeNotifier {
       if (responseStatue['error'] != null) {
         throw httpexception(responseStatue['error']['message']);
       }
+      _tokenId = responseStatue['idToken'];
+      
+      _userId = responseStatue['localId'];
+      _dateExpire = DateTime.now()
+          .add(Duration(seconds: int.parse(responseStatue['expiresIn'])));
+      notifyListeners();
     } catch (error) {
       rethrow;
     }

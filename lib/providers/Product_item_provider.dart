@@ -14,6 +14,9 @@ class Products_Item with ChangeNotifier {
     return [..._items];
   }
 
+  late String authToken;
+  Products_Item(this.authToken, this._items);
+  Products_Item.seconConstructor();
   List<Product> get favorites_item {
     return _items.where((element) => element.isfavorite).toList();
   }
@@ -24,7 +27,7 @@ class Products_Item with ChangeNotifier {
 // }
   Future<void> fetchAndSetProducts() async {
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json');
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json?auth=$authToken');
     try {
       final response = await http.get(url);
 
@@ -43,6 +46,7 @@ class Products_Item with ChangeNotifier {
             isfavorite: productData['isFavo'] as bool));
       });
       _items = loadedData;
+      print(_items);
       notifyListeners();
     } catch (error) {
       print('eeeerrrrrroooorrrrrrrr ${error.toString()}');
@@ -52,7 +56,7 @@ class Products_Item with ChangeNotifier {
 
   Future<void> addItem(Product newProduct) async {
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json');
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json?auth=$authToken');
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -79,8 +83,8 @@ class Products_Item with ChangeNotifier {
 
   Future<void> updateProduct(Product newProduct) async {
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/${newProduct.id}.json');
-    http.patch(url,
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/${newProduct.id}.json?auth=$authToken');
+    await http.patch(url,
         body: json.encode({
           'title': newProduct.title,
           'description': newProduct.description,
@@ -99,7 +103,7 @@ class Products_Item with ChangeNotifier {
     _items.removeAt(indexProduct);
     notifyListeners();
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.json');
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products/$id.json?auth=$authToken');
     final value = await http.delete(url);
     if (value.statusCode >= 400) {
       _items.insert(indexProduct, product);

@@ -48,13 +48,16 @@ class _OrderItemState extends State<OrderItem> {
               ),
               child: ListView.builder(
                 itemBuilder: ((context, index) => ListTile(
-                      title: Text('${widget.orders.listofCarts[index].title}'),
+                      title: Text(
+                        '${widget.orders.listofCarts[index].title}',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
                       subtitle:
                           Text('\$${widget.orders.listofCarts[index].price}'),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                      
                           Text('${widget.orders.listofCarts[index].quantity}x'),
                           Text(
                               '\$${widget.orders.listofCarts[index].price * widget.orders.listofCarts[index].quantity}')

@@ -23,10 +23,13 @@ class orders with ChangeNotifier {
   List<OrderedItem> get items {
     return [..._items];
   }
+  late String token;
+  orders(this.token,this._items);
+  orders.second();
 
   Future<void> fetchAndsetOrders() async {
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Orders.json');
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Orders.json?auth=$token');
     final response = await http.get(url);
     List<OrderedItem> loadedData = [];
     final extraxtedData = json.decode(response.body)==null? null: json.decode(response.body) as Map<String, dynamic>;
@@ -56,7 +59,7 @@ class orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> listOfOrder, double total) async {
     Uri url = Uri.parse(
-        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Orders.json');
+        'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Orders.json?auth=$token');
     final dateStamp = DateTime.now();
     try {
       final response = await http.post(url,
