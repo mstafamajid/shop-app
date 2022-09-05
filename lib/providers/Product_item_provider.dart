@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class Products_Item with ChangeNotifier {
         filter ? 'orderBy="creatorId"&equalTo="$userid"' : '';
     Uri url = Uri.parse(
         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json?auth=$authToken&$filterdString');
-    print(url.toString());
     try {
       final response = await http.get(url);
 
@@ -41,6 +41,7 @@ class Products_Item with ChangeNotifier {
       final userFavo = await http.get(Uri.parse(
           'https://shopapp-bd3ee-default-rtdb.firebaseio.com/userFavorates/$userid.json?auth=$authToken'));
       final favodata = jsonDecode(userFavo.body);
+
       List<Product> loadedData = [];
       if (extraxtedData == null) return;
       extraxtedData.forEach((productId, productData) {
@@ -54,7 +55,7 @@ class Products_Item with ChangeNotifier {
                 favodata == null ? false : favodata[productId] ?? false));
       });
       _items = loadedData;
-      print(_items);
+
       notifyListeners();
     } catch (error) {
       print('eeeerrrrrroooorrrrrrrr ${error.toString()}');

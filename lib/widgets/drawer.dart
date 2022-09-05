@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/manage_product.dart';
 import 'package:shop_app/screens/order_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
@@ -34,6 +36,14 @@ class myDrawer extends StatelessWidget {
               title: const Text('manage product'),
               onTap: () =>
                   Navigator.pushReplacementNamed(context, manage_product.id)),
+          Spacer(),
+          ListTile(
+              leading: const Icon(Icons.logout_sharp),
+              title: const Text('logout'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Provider.of<Auth>(context, listen: false).logout();
+              }),
         ],
       ),
     );

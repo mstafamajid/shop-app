@@ -10,12 +10,13 @@ class Auth with ChangeNotifier {
   String _userId = '';
 
   bool get isAuth {
-    print(token);
     return token != null;
   }
-String get userid{
-  return _userId;
-}
+
+  String get userid {
+    return _userId;
+  }
+
   String? get token {
     if (_tokenId.isNotEmpty &&
         _userId.isNotEmpty &&
@@ -42,7 +43,7 @@ String get userid{
         throw httpexception(responseStatue['error']['message']);
       }
       _tokenId = responseStatue['idToken'];
-      
+
       _userId = responseStatue['localId'];
       _dateExpire = DateTime.now()
           .add(Duration(seconds: int.parse(responseStatue['expiresIn'])));
@@ -58,5 +59,12 @@ String get userid{
 
   Future<void> signIn(String email, String password) async {
     return authenticate(email, password, 'signInWithPassword');
+  }
+
+  void logout() {
+    _userId = '';
+    _tokenId = '';
+    _dateExpire = null;
+    notifyListeners();
   }
 }
