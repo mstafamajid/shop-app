@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/ordered_items.dart';
@@ -118,7 +119,10 @@ class _Cart_screenState extends State<Cart_screen> {
                     ],
                   )
                 : Center(
-                    child: CircularProgressIndicator(),
+                    child:  SpinKitFadingCube(
+                    size: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   )
             : Center(
                 child: Text('add some things'),

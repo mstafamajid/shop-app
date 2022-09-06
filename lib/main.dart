@@ -10,6 +10,7 @@ import 'package:shop_app/screens/cart_Screen.dart';
 import 'package:shop_app/screens/editProductScreen.dart';
 import 'package:shop_app/screens/order_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
+import 'package:shop_app/screens/spash_screen.dart';
 
 import 'package:shop_app/themeData.dart';
 
@@ -52,7 +53,15 @@ class MyApp extends StatelessWidget {
           builder: ((context, auth, child) => MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: Mytheme(context),
-                home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+                home: auth.isAuth
+                    ? ProductsOverviewScreen()
+                    : FutureBuilder(
+                        future: auth.tryAutoLogging(),
+                        builder: (context, snapshot) =>
+                            snapshot.connectionState == ConnectionState.waiting
+                                ? Splash()
+                                : AuthScreen(),
+                      ),
                 routes: {
                   AuthScreen.routeName: (context) => AuthScreen(),
                   ProductsOverviewScreen.routname: (context) =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/Product_item_provider.dart';
 import 'package:shop_app/providers/cart.dart';
@@ -79,8 +80,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 .fetchAndSetProducts(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child: SpinKitFadingCube(
+                    size: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 );
               } else {
                 if (snapshot.hasError) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/models/myexceptionHandler.dart';
@@ -229,7 +230,10 @@ class _AuthCardState extends State<AuthCard> {
                   height: 20,
                 ),
                 if (_isLoading)
-                  CircularProgressIndicator()
+                  SpinKitFadingCube(
+                    size: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
                 else
                   ElevatedButton(
                     child:
