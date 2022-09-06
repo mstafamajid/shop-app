@@ -37,7 +37,7 @@ class manage_product extends StatelessWidget {
             snapshot.connectionState == ConnectionState.waiting
                 ? Center(
                     child:  SpinKitFadingCube(
-                    size: 30,
+                    size: 50,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   )

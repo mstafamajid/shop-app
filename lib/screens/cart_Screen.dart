@@ -68,10 +68,13 @@ class _Cart_screenState extends State<Cart_screen> {
                                         });
                                         scaffmesg.hideCurrentSnackBar();
                                         scaffmesg.showSnackBar(SnackBar(
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                             content: Text(
-                                          'Added order',
-                                          textAlign: TextAlign.center,
-                                        )));
+                                              'Added order',
+                                              textAlign: TextAlign.center,
+                                            )));
                                       } catch (e) {
                                         setState(() {
                                           isloading = false;
@@ -119,10 +122,10 @@ class _Cart_screenState extends State<Cart_screen> {
                     ],
                   )
                 : Center(
-                    child:  SpinKitFadingCube(
-                    size: 30,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                    child: SpinKitFadingCube(
+                      size: 50,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   )
             : Center(
                 child: Text('add some things'),

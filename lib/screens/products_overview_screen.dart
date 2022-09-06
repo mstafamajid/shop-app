@@ -82,7 +82,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: SpinKitFadingCube(
-                    size: 30,
+                    size: 50,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 );

@@ -133,7 +133,7 @@ await Provider.of<Products_Item>(context, listen: false)
       body: isLoading
           ? Center(
               child:  SpinKitFadingCube(
-                    size: 30,
+                    size: 50,
                     color: Theme.of(context).colorScheme.primary,
                   ),
             )
