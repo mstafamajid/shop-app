@@ -32,7 +32,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             Consumer<Cart>(
               builder: ((context, cart, child) => Badge(
                     value: cart.length.toString(),
-                    color: Theme.of(context).canvasColor,
+                    color: Theme.of(context).colorScheme.primary,
                     child: IconButton(
                       onPressed: () {
                         Navigator.pushNamed(context, Cart_screen.id);
@@ -72,7 +72,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ],
           title: Text(
             'Shop App',
-            style: Theme.of(context).textTheme.headline1,
           ),
         ),
         body: FutureBuilder(

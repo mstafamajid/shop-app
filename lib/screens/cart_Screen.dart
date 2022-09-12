@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/ordered_items.dart';
@@ -127,8 +128,21 @@ class _Cart_screenState extends State<Cart_screen> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   )
-            : Center(
-                child: Text('add some things'),
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Lottie.asset('assets/lottie/noItem.json'),
+                  ),
+                  Text(
+                    'No Items yet!',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 40),
+                    textAlign: TextAlign.center,
+                  )
+                ],
               ));
   }
 }

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/ordered_items.dart';
 import 'package:shop_app/widgets/drawer.dart';
@@ -28,14 +31,26 @@ class _OrderScreenState extends State<OrderScreen> {
             future:
                 Provider.of<orders>(context, listen: false).fetchAndsetOrders(),
             builder: ((context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child:  SpinKitFadingCube(
-                    size: 50,
-                    color: Theme.of(context).colorScheme.primary,
-                  ));
-              } else {
-                if (snapshot.hasError) {
-                  return const Center(child: Text(''));
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.data == false) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        child: Lottie.asset(
+                          'assets/lottie/noOrder.json',
+                        ),
+                      ),
+                      Text(
+                        'No Orders yet!',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 40),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  );
                 } else {
                   return Consumer<orders>(builder: ((context, order, child) {
                     return ListView.builder(
@@ -45,6 +60,14 @@ class _OrderScreenState extends State<OrderScreen> {
                     );
                   }));
                 }
+              } else if (ConnectionState.waiting == snapshot.connectionState) {
+                return Center(
+                    child: SpinKitFadingCube(
+                  size: 50,
+                  color: Theme.of(context).colorScheme.primary,
+                ));
+              } else {
+                return Text('data');
               }
             })));
   }

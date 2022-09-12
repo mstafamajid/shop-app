@@ -23,19 +23,25 @@ class orders with ChangeNotifier {
   List<OrderedItem> get items {
     return [..._items];
   }
+
   late String token;
   late String userid;
-  orders(this.token,this._items, this.userid);
+  orders(this.token, this._items, this.userid);
   orders.second();
 
-  Future<void> fetchAndsetOrders() async {
+  Future<bool> fetchAndsetOrders() async {
     Uri url = Uri.parse(
         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Orders.json?auth=$token&orderBy="userId"&equalTo="$userid"');
     final response = await http.get(url);
     List<OrderedItem> loadedData = [];
-    final extraxtedData = json.decode(response.body)==null? null: json.decode(response.body) as Map<String, dynamic>;
-    if(extraxtedData==null)
-    return;
+    final extraxtedData = json.decode(response.body) == null
+        ? null
+        : json.decode(response.body) as Map<String, dynamic>;
+    if (extraxtedData == null || extraxtedData.isEmpty) {
+      print('aaaaaaaaaaaaaaaaaaa');
+      return false;
+    }
+
     extraxtedData.forEach((key, ordered_item) {
       loadedData.insert(
         0,
@@ -53,9 +59,10 @@ class orders with ChangeNotifier {
         ),
       );
     });
-    _items=loadedData;
-    
+    _items = loadedData;
+
     notifyListeners();
+    return true;
   }
 
   Future<void> addOrder(List<CartItem> listOfOrder, double total) async {
@@ -65,7 +72,7 @@ class orders with ChangeNotifier {
     try {
       final response = await http.post(url,
           body: json.encode({
-            'userId':userid,
+            'userId': userid,
             'totalAmount': total,
             'dateTime': dateStamp.toIso8601String(),
             'products': listOfOrder

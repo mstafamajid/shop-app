@@ -6,6 +6,15 @@ import 'package:flutter/src/widgets/framework.dart';
 //const Color(0xffF9F5EB)
 ThemeData Mytheme(BuildContext context) {
   return ThemeData(
+    appBarTheme: AppBarTheme(
+        titleTextStyle: TextStyle(
+          color: const Color(0xff6db9fc),
+          fontWeight: FontWeight.w900,
+          fontSize: 30,
+        ),
+        elevation: 0,
+        backgroundColor: const Color(0xffeff7ff),
+        foregroundColor: const Color(0xff6db9fc)),
     dialogTheme: const DialogTheme(
       titleTextStyle:
           TextStyle(fontSize: 22, color: Colors.red, fontFamily: 'lato'),

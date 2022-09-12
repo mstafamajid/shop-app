@@ -33,8 +33,8 @@ class Badge extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 10, color: Theme.of(context).colorScheme.primary),
+              style:
+                  TextStyle(fontSize: 10, color: Theme.of(context).canvasColor),
             ),
           ),
         )

@@ -17,6 +17,7 @@ class AuthScreen extends StatelessWidget {
     // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
     // transformConfig.translate(-10.0);
     var Appbar = AppBar(
+    
       title: Text(
         'My Shop',
         style: TextStyle(
@@ -25,7 +26,7 @@ class AuthScreen extends StatelessWidget {
             fontFamily: 'lato',
             fontWeight: FontWeight.w900),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).canvasColor,
       elevation: 0,
       centerTitle: true,
     );
@@ -35,9 +36,7 @@ class AuthScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(color: Colors.white),
-          ),
+          Container(),
           SingleChildScrollView(
             child: Container(
               height: (deviceSize.size.height -

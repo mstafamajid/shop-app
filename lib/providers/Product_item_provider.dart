@@ -27,7 +27,7 @@ class Products_Item with ChangeNotifier {
 //         'https://shopapp-bd3ee-default-rtdb.firebaseio.com/Products.json');
 
 // }
-  Future<void> fetchAndSetProducts([bool filter = false]) async {
+  Future<bool> fetchAndSetProducts([bool filter = false]) async {
     String filterdString =
         filter ? 'orderBy="creatorId"&equalTo="$userid"' : '';
     Uri url = Uri.parse(
@@ -42,8 +42,9 @@ class Products_Item with ChangeNotifier {
           'https://shopapp-bd3ee-default-rtdb.firebaseio.com/userFavorates/$userid.json?auth=$authToken'));
       final favodata = jsonDecode(userFavo.body);
 
+      if (extraxtedData == null || extraxtedData.isEmpty) return false;
       List<Product> loadedData = [];
-      if (extraxtedData == null) return;
+
       extraxtedData.forEach((productId, productData) {
         loadedData.add(Product(
             id: productId,
@@ -61,6 +62,7 @@ class Products_Item with ChangeNotifier {
       print('eeeerrrrrroooorrrrrrrr ${error.toString()}');
       rethrow;
     }
+    return true;
   }
 
   Future<void> addItem(Product newProduct) async {
